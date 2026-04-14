@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+    if (!origin || /^http:\/\/(localhost:\d+|63\.177\.254\.134)$/.test(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));

@@ -41,6 +41,16 @@ router.post(
       }
 
       const p = parsed.data;
+
+      const existing = await pool.query(
+        "SELECT id FROM plants WHERE LOWER(name) = LOWER($1)",
+        [p.name]
+      );
+      if (existing.rows.length > 0) {
+        res.status(409).json({ error: "Plant already exists" });
+        return;
+      }
+
       const result = await pool.query(
         `INSERT INTO plants (name, planting_start, planting_end, harvesting_start, harvesting_end, water, shadow, height, spread, body_water, is_tree, created_by)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)

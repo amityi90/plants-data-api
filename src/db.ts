@@ -9,7 +9,15 @@ export function getPool(): Pool {
     pool = new Pool({
       connectionString,
       ssl: useSSL ? { rejectUnauthorized: false } : false,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+      max: 5,
     });
+
+    // Keep Neon alive — ping every 4 minutes to prevent free-tier suspension
+    setInterval(() => {
+      pool.query('SELECT 1').catch(() => {});
+    }, 4 * 60 * 1000);
   }
   return pool;
 }
